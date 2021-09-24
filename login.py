@@ -11,17 +11,10 @@ import cgitb
 cgitb.enable()
 form = cgi.FieldStorage()
 http_cookie=os.environ['HTTP_COOKIE']
-cookie = SimpleCookie(http_cookie)
-c_username = None
-c_password = None
+
 #print('Content-Type: application/json')
 #print(json.dumps(dict(os.environ), indent = 4))
-if cookie.get("Username"):
-    c_username = cookie.get("Username").value
-if cookie.get("Password"):
-    c_password = cookie.get("Password").value
-
-if c_username == username and c_password == password:#the cookie is indeed legit
+if  'logged_in=true' in http_cookie:#the cookie is indeed legit
     print(secret_page(username, password))
 else:#if no cookie presented or the cookie is invalie
     input_username= form.getvalue("username")
@@ -30,8 +23,7 @@ else:#if no cookie presented or the cookie is invalie
         print(login_page()) #no user input provided
     elif (input_username == username and input_password == password):
         
-        print (f"Set-Cookie:Username = {username};")#set cookies
-        print (f"Set-Cookie:Password = {password};")
+        print (f"Set-Cookie: logged_in=true")#set cookies
         print('Content-Type: text/html')
         print()
         print(f"<!doctype html><html><body><li>logged in successfully</li></body></html>")
